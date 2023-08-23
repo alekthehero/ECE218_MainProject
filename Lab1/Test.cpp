@@ -11,6 +11,6 @@ Test::Test(int num)
 
 void Test::print()
 {
-    std::cout << data << std::endl;
+    std::cout << "Data: " << data << std::endl;
 }
 
