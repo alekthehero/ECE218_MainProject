@@ -20,5 +20,6 @@ int main(int argc, char* argv[])
     std::cout << "sum = " << sum << std::endl;
     std::cout << "A.get_size() = " << A.get_size() << std::endl;
     return 0;
+    
 }
 
