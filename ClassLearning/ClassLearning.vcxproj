@@ -230,10 +230,18 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="BitmapClass\bitmap.cpp" />
     <ClCompile Include="ClassLearning.cpp" />
+    <ClCompile Include="LinkedListClass\Item.cpp" />
+    <ClCompile Include="LinkedListClass\Link.cpp" />
+    <ClCompile Include="LinkedListClass\LinkedList.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArrayClass\array.h" />
+    <ClInclude Include="BitmapClass\bitmap.h" />
+    <ClInclude Include="LinkedListClass\Item.h" />
+    <ClInclude Include="LinkedListClass\Link.h" />
+    <ClInclude Include="LinkedListClass\LinkedList.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

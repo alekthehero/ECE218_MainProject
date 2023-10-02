@@ -1,25 +1,24 @@
 #include <iostream>
 #include <ostream>
 
-#include "ArrayClass/array.h"
+#include "LinkedListClass/Item.h"
+#include "LinkedListClass/LinkedList.h"
+
+struct item;
 
 int main(int argc, char* argv[])
 {
-    array A(20);
-    for (int i=0; i<20; i++)
-    {
-        A.set(i, i*i);
-    }
+    LinkedList<item*> list;
 
-    int sum = 0;
-    for (int i = 0; i < 20; ++i)
-    {
-        sum += A.get(i);
-    }
+    item * item1 = new item("Apple", "123456789", 1);
+    item * item2 = new item("Orange", "987654321", 2);
+    item * shop[100];
+
+    list.add(item1);
+    list.add(shop[2]);
     
-    std::cout << "sum = " << sum << std::endl;
-    std::cout << "A.get_size() = " << A.get_size() << std::endl;
-    return 0;
+    
+    //std::cout << list.get(0) << std::endl;
     
 }
 

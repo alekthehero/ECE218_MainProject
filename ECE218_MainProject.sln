@@ -4,6 +4,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lab1_RPN", "Lab1_RPN\Lab1_R
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClassLearning", "ClassLearning\ClassLearning.vcxproj", "{AE10EE5A-FA5D-4F7C-A6BC-821A69686760}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lab2_SuperInt", "Lab2_SuperInt\Lab2_SuperInt.vcxproj", "{4AB954AA-BC2C-4A1C-868F-24511AA2FA4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{AE10EE5A-FA5D-4F7C-A6BC-821A69686760}.Debug|Any CPU.Build.0 = Debug|Win32
 		{AE10EE5A-FA5D-4F7C-A6BC-821A69686760}.Release|Any CPU.ActiveCfg = Release|Win32
 		{AE10EE5A-FA5D-4F7C-A6BC-821A69686760}.Release|Any CPU.Build.0 = Release|Win32
+		{4AB954AA-BC2C-4A1C-868F-24511AA2FA4A}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{4AB954AA-BC2C-4A1C-868F-24511AA2FA4A}.Debug|Any CPU.Build.0 = Debug|Win32
+		{4AB954AA-BC2C-4A1C-868F-24511AA2FA4A}.Release|Any CPU.ActiveCfg = Release|Win32
+		{4AB954AA-BC2C-4A1C-868F-24511AA2FA4A}.Release|Any CPU.Build.0 = Release|Win32
 	EndGlobalSection
 EndGlobal
