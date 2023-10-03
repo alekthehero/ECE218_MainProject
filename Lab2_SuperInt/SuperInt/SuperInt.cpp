@@ -33,7 +33,7 @@ SuperInt::SuperInt(const std::string& str)
 
 SuperInt::~SuperInt()
 {
-    delete &digits_;
+    //delete &digits_;
 }
 
 void SuperInt::print(std::ostream& out) const

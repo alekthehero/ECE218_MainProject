@@ -62,8 +62,11 @@ void RPN::push(const SuperInt input)
 
 void RPN::iterate_string(const std::string& input)
 {
-    // coming in like 3 2 + 4 6 + + .
+    // coming in like 3 2 + 4 6 + +
 
+    // Change input to stringstream for easier parsing
+    std::stringstream ss(input);
+    
     // for testing
     if (input == "stack")
     {

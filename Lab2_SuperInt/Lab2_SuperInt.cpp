@@ -1,5 +1,5 @@
 #include <iostream>
-#include "RPNClass/RPN.h"
+#include "../Lab2_SuperInt/RPNClass/RPN.h"
 
 int main(int argc, char* argv[])
 {
