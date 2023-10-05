@@ -15,7 +15,6 @@ int main(int argc, char* argv[])
     //get the line input
     getline(std::cin , input);
     
-    
     while (input != "exit")
     {
         //input would look like 4 3 + 4 5 + + .
