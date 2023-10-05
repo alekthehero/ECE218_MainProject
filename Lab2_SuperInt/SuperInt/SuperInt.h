@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include <string>
 #include <vector>
-typedef unsigned char digit;
 
 class SuperInt
 {

@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <ostream>
-#include <stdexcept>
 #include <limits>
 
 SuperInt::SuperInt()
