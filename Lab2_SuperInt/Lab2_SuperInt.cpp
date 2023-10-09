@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
     
     while (input != "exit")
     {
-        //input would look like 4 3 + 4 5 + + .
+        //input would look like 4 3 + 4 5 + +
 
         rpn.iterate_string(input);
 

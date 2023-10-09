@@ -3,7 +3,7 @@
 
 struct item
 {
-protected:
+public:
     std::string name;
     std::string upc;
     int price;

@@ -17,8 +17,6 @@ public:
     any * get(int index);
     void print();
     
-    
-protected:
     link<any> * head;
     
 };
