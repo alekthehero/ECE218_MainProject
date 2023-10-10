@@ -40,7 +40,17 @@ int main(int argc, char* argv[])
     
 #pragma endregion
 
+#pragma region InsertionSort_Array
 
+    int arr[] = { 9, 11, 13, 10, 6, 7, 1, 2, 3, 4, 5, 6 };
+
+    // Start with a line between sorted and unsorted sections of the array.
+    // the main loop will move the line to the right sort those two positions and there values and move to the next
+    // section.
+    // When the sorting is occuring it needs to take that item if not in the right place and insert it into the right
+    // place, for example when sorting 13 and 10, 10 will have to move after 9 and before 11
+
+#pragma endregion
     
     
     return 0;
