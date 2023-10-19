@@ -1,16 +1,27 @@
 #include <iostream>
 #include <ostream>
+#include <vector>
+#include <string>
+
 #include "LinkedListClass/Item.h"
 #include "LinkedListClass/LinkedList.h"
 
+using namespace std;
+
 struct item;
+
+struct pussycat 
+{ string name; 
+    string colour; 
+    int age; 
+    int number_of_legs; };
 
 int main(int argc, char* argv[])
 {
     
 #pragma region LinkedList_Insert
     
-    LinkedList<item*> linked_list;
+    /*LinkedList<item*> linked_list;
     
     item * item1 = new item("Apple", "123456789", 1);
     item * item2 = new item("Orange", "987654321", 2);
@@ -35,7 +46,7 @@ int main(int argc, char* argv[])
     {
         prev = ptr;
         ptr = ptr->next;
-    }
+    }*/
     
     
 #pragma endregion
@@ -51,8 +62,31 @@ int main(int argc, char* argv[])
     // place, for example when sorting 13 and 10, 10 will have to move after 9 and before 11
 
 #pragma endregion
-    
-    
+
+#pragma region 3dArray
+
+    /*int arr3D[3][3][2];
+
+    //fill with count
+    int count = 0;
+    for (int x = 0; x < 3; x++)
+        for (int y = 0; y < 3; y++)
+            for (int z = 0; z < 2; z++)
+                arr3D[x][y][z] = count++;
+
+    for (int x = 0; x < 3; x++)
+        for (int y = 0; y < 3; y++)
+            for (int z = 0; z < 2; z++)
+                std::cout << arr3D[x][y][z] << std::endl;*/
+
+#pragma endregion
+
+    pussycat puss[1000];
+    pussycat* puss2;
+    pussycat* puss3;
+    pussycat* puss4[1000];
+    pussycat** puss5;
+   
     return 0;
 }
 

@@ -17,7 +17,7 @@ public:
     
     void perform_operation(char input) const;
     SuperInt back() const;
-    void push(SuperInt input);
+    void push(const SuperInt& input);
     void iterate_string(const std::string &input);
     bool two_items_check() const;
 

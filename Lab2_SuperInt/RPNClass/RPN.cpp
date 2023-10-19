@@ -65,7 +65,7 @@ void RPN::iterate_string(const std::string& input)
     // coming in like 3 2 + 4 6 + +
 
     // Change input to stringstream for easier parsing
-    std::istringstream ss(input);
+    std::stringstream ss(input);
     
     // for testing
     if (input == "stack")
@@ -79,82 +79,95 @@ void RPN::iterate_string(const std::string& input)
         return;
     }
     
+    //iterate over the string if the character is a number add it to the stack if its an operator do the operation
+    //if its a space then do nothing
+    //if its a . then end the loop
+    //if its a letter then check if its a variable or a function
+    //if its a variable then check if its in the vector
+
+    // Make sure user did not forget the period at end of input
+    if (input.back() != '.')
+    {
+        cout << "\nError: Missing period at end of input" << endl;
+        return;
+    }
+    
     string accumulated_number;
     string accumulated_string;
     bool is_variable = false;
-
     
-    while(!ss.eof())
+    for (const char i : input)
     {
-        char curr_Char;
-        // Use get so that whitespace isnt skipped
-        ss.get(curr_Char);
-        if (ss.eof())
+        //check if the character is a number
+        if (isdigit(i))
         {
-            if (is_variable)
-            {
-                cout << "Defining Variable: " << accumulated_string << endl;
-                this->variables_.push_back(variable(accumulated_string, this->back())); // NOLINT(modernize-use-emplace)
-                break;
+            //add the number to the stack
+            accumulated_number += i;
+        }
+        else if (i == ' ')
+        {
+            //push the accumulated number onto the stack
+            if (!accumulated_number.empty()) {
+                // Convert the accumulated digits to a double and push onto the stack
+                this->push(SuperInt(accumulated_number));
+                accumulated_number.clear(); // Reset the digit accumulator
             }
+            //check if the accumulated string is a variable
+            if (!accumulated_string.empty())
+            {
+                //if its not a function then check if we are defining it now
+                if (is_variable)
+                {
+                    cout << "\nDefining Variable: " << accumulated_string << endl;
+                    this->variables_.push_back(variable(accumulated_string, this->back())); // NOLINT(modernize-use-emplace)
+                    break;
+                }
+
+                //check if the variable is in the vector
+                bool found = false;
+                for (const variable &var : this->variables_)
+                {
+                    if (var.get_name() == accumulated_string)
+                    {
+                        //if the variable is in the vector then push the value onto the stack
+                        this->push(var.get_value());
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    cout << "\nWarn: Variable " << accumulated_string << " not found" << endl;
+                    //prompt the user to enter it now
+                    cout << "Enter the value for " << accumulated_string << ": ";
+                    string value;
+                    cin >> value;
+                    //push the value onto the stack
+                    this->push(SuperInt(value));
+                    //add the variable to the vector
+                    this->variables_.push_back(variable(accumulated_string, SuperInt(value)));  // NOLINT(modernize-use-emplace)
+                    cin.ignore();
+                }
+                
+                //clear the accumulated string
+                accumulated_string.clear();
+            }
+        }
+        else if (i == '.')
+        {
+            
+            //print the last item on the stack
+            cout << "\nResult: ";
+            this->back().printf(std::cout);
+            //clear the stack
+            this->rpn_stack_.clear();
+            //clear the accumulated string and number
+            accumulated_string.clear();
+            accumulated_number.clear();
+            
             break;
         }
-        // Check if the character is a number
-        if (isdigit(curr_Char))
-        {
-            // Add the number to the stack
-            accumulated_number += curr_Char;
-        }
-        else if (curr_Char == ' ')
-        {
-            // Push the accumulated number onto the stack
-             if (!accumulated_number.empty()) {
-                 // Convert the accumulated digits to a double and push onto the stack
-                 this->push(SuperInt(accumulated_number));
-                 accumulated_number.clear(); // Reset the digit accumulator
-             }
-             // Check if the accumulated string is a variable
-             if (!accumulated_string.empty())
-             {
-                 //if its not a function then check if we are defining it now
-                 if (is_variable)
-                 {
-                     cout << "\nDefining Variable: " << accumulated_string << endl;
-                     this->variables_.push_back(variable(accumulated_string, this->back())); // NOLINT(modernize-use-emplace)
-                     break;
-                 }
-    
-                 //check if the variable is in the vector
-                 bool found = false;
-                 for (const variable &var : this->variables_)
-                 {
-                     if (var.get_name() == accumulated_string)
-                     {
-                         //if the variable is in the vector then push the value onto the stack
-                         this->push(var.get_value());
-                         found = true;
-                         break;
-                     }
-                 }
-                 if (!found)
-                 {
-                     cout << "\nWarn: Variable " << accumulated_string << " not found" << endl;
-                     //prompt the user to enter it now
-                     cout << "Enter the value for " << accumulated_string << ": ";
-                     string value;
-                     cin >> value;
-                     //push the value onto the stack
-                     this->push(SuperInt(value));
-                     //add the variable to the vector
-                     this->variables_.push_back(variable(accumulated_string, SuperInt(value)));  // NOLINT(modernize-use-emplace)
-                     cin.ignore();
-                 }
-                 
-                 //clear the accumulated string
-                 accumulated_string.clear();
-             }
-        }
-        else if (curr_Char == '=')
+        else if (i == '=')
         {
             // if the stack is empty then we cant define a variable and if the accumulated string has contents the format is wrong
             if (this->rpn_stack_.empty() || !accumulated_string.empty())
@@ -164,29 +177,21 @@ void RPN::iterate_string(const std::string& input)
             }
             is_variable = true;
         }
-        else if (isalpha(curr_Char))
+        else if (isalpha(i))
         {
             //Accumulate the string
-            accumulated_string += curr_Char;
+            accumulated_string += i;
         }
         else
         {
+            
             //if there is an operator then we need to do the operation
             //do the calculation with the given operator
-            this->perform_operation(curr_Char);
+            this->perform_operation(i);
             
         }
-        
     }
     
-    // Print the last item on the stack
-    cout << "Result: ";
-    this->back().printf(std::cout);
-    //clear the stack
-    this->rpn_stack_.clear();
-    //clear the accumulated string and number
-    accumulated_string.clear();
-    accumulated_number.clear();
 }
 
 bool RPN::two_items_check() const
