@@ -60,6 +60,7 @@ int main(int argc, char* argv[])
     // section.
     // When the sorting is occuring it needs to take that item if not in the right place and insert it into the right
     // place, for example when sorting 13 and 10, 10 will have to move after 9 and before 11
+    
 
 #pragma endregion
 
@@ -81,27 +82,31 @@ int main(int argc, char* argv[])
 
 #pragma endregion
 
-    int a[] = {3 ,4 ,6, 2, 1, 5, 7, 9, 8, 10};
-    int len = 10;
+#pragma region BubbleSort_Array
     
-    for(int i = 0; i < len; i ++)
-    {
-        for (int y = 0; y < len - 1; y ++)
-        {
-            if(a[y] > a[y + 1])
-            {
-                const int temp = a[y + 1];
-                a[y + 1] = a[y];
-                a[y] = temp;
-            }
-        }
-    }
+    // int a[] = {3 ,4 ,6, 2, 1, 5, 7, 9, 8, 10};
+    // int len = 10;
+    //
+    // for(int i = 0; i < len; i ++)
+    // {
+    //     for (int y = 0; y < len - 1; y ++)
+    //     {
+    //         if(a[y] > a[y + 1])
+    //         {
+    //             const int temp = a[y + 1];
+    //             a[y + 1] = a[y];
+    //             a[y] = temp;
+    //         }
+    //     }
+    // }
+    //
+    //
+    // for (int i : a)
+    // {
+    //     std::cout << i << std::endl;
+    // }
 
-
-    for (int i : a)
-    {
-        std::cout << i << std::endl;
-    }
+#pragma endregion
     
     return 0;
 }
