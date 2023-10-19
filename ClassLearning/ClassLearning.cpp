@@ -81,12 +81,28 @@ int main(int argc, char* argv[])
 
 #pragma endregion
 
-    pussycat puss[1000];
-    pussycat* puss2;
-    pussycat* puss3;
-    pussycat* puss4[1000];
-    pussycat** puss5;
-   
+    int a[] = {3 ,4 ,6, 2, 1, 5, 7, 9, 8, 10};
+    int len = 10;
+    
+    for(int i = 0; i < len; i ++)
+    {
+        for (int y = 0; y < len - 1; y ++)
+        {
+            if(a[y] > a[y + 1])
+            {
+                const int temp = a[y + 1];
+                a[y + 1] = a[y];
+                a[y] = temp;
+            }
+        }
+    }
+
+
+    for (int i : a)
+    {
+        std::cout << i << std::endl;
+    }
+    
     return 0;
 }
 
