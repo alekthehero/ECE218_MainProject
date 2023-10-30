@@ -6,18 +6,19 @@
 
 SuperInt::SuperInt()
 {
-    //Default constructor
-    digits_ = std::vector<int>();   
+    digits_ = std::vector<int>();
+    is_negative_ = false;
 }
 
 SuperInt::SuperInt(const SuperInt& other)
 {
-    //Constructor when we have a SuperInt object
     digits_ = other.digits_;
+    is_negative_ = other.is_negative_;
 }
 
-SuperInt::SuperInt(const std::string& str)
+SuperInt::SuperInt(const std::string& str, const bool neg = false)
 {
+    is_negative_ = neg;
     digits_ = std::vector<int>();
     for (const char digit_char : str) {
         if (isdigit(digit_char)) {
@@ -30,20 +31,19 @@ SuperInt::SuperInt(const std::string& str)
     }
 }
 
-SuperInt::~SuperInt()
-{
-    //delete &digits_;
-}
-
 void SuperInt::print(std::ostream& out) const
 {
+    if (this->is_negative_)
+        out << "-";
     for (const int digit : digits_) {
-        out << std::to_string(digit);
+        out << std::to_string(digit) << std::endl;
     }
 }
 
 std::ostream& SuperInt::operator<<(std::ostream& out) const
 {
+    if (this->is_negative_)
+        out << "-";
     for (const int digit : digits_) {
         out << std::to_string(digit);
     }
@@ -52,7 +52,10 @@ std::ostream& SuperInt::operator<<(std::ostream& out) const
 
 void SuperInt::printf(std::ostream& out) const
 {
-    int char_count = 0;
+    size_t char_count = 0;
+
+    if (this->is_negative_)
+        out << "-";
 
     for (const int digit : digits_) {
         out << std::to_string(digit);
@@ -65,42 +68,51 @@ void SuperInt::printf(std::ostream& out) const
     }
 }
 
-SuperInt SuperInt::operator+(const SuperInt& other)
-{
+SuperInt SuperInt::operator+(const SuperInt& other) {
     SuperInt result;
 
-    // carry and index
-    int carry = 0;
-    int i = digits_.size() - 1;
-    int j = other.digits_.size() - 1;
+    // Determine the signs of the operands
+    bool is_this_negative = is_negative_;
+    bool is_other_negative = other.is_negative_;
 
-    // add right to left
-    while (i >= 0 || j >= 0 || carry) {
-        // sum is equal to the carry from the last iteration
-        int sum = carry;
-        // check if we have digits left to add
-        if (i >= 0) {
-            sum += digits_[i];
-            i--;
+    if (is_this_negative == is_other_negative) {
+        // Both operands have the same sign, perform addition
+        int carry = 0;
+        int i = digits_.size() - 1;
+        int j = other.digits_.size() - 1;
+
+        while (i >= 0 || j >= 0 || carry) {
+            int sum = carry;
+            if (i >= 0) {
+                sum += digits_[i];
+                i--;
+            }
+            if (j >= 0) {
+                sum += other.digits_[j];
+                j--;
+            }
+
+            carry = sum / 10;
+            sum %= 10;
+            result.digits_.insert(result.digits_.begin(), sum);
         }
-        if (j >= 0) {
-            sum += other.digits_[j];
-            j--;
+
+        result.is_negative_ = is_this_negative;
+    } else {
+        // Operands have different signs, perform subtraction
+        // If 'this' is negative and 'other' is positive, negate 'other' and add it to 'this'
+        if (is_this_negative) {
+            result = SuperInt(other) - *this;
+        } else {
+            result = *this - other;
         }
-
-        // calculate the carry and sum
-        carry = sum / 10;
-        sum %= 10;
-
-        // add the digit to the result
-        result.digits_.insert(result.digits_.begin(), sum);
     }
 
     return result;
 }
 
-SuperInt SuperInt::operator-(const SuperInt& other)
-{
+SuperInt SuperInt::operator-(const SuperInt& other) const {
+    
     SuperInt result;
 
     // Borrow and index
@@ -124,19 +136,22 @@ SuperInt SuperInt::operator-(const SuperInt& other)
         }
         
         result.digits_.insert(result.digits_.begin(), diff);
-
-        // Update the index
+        
         if (i >= 0) i--;
         if (j >= 0) j--;
     }
 
     // Check if negative number
     if (borrow) {
-        std::cout << "Error: Negative number not allowed." << std::endl;
+        std::cout << "Error: Negative number not allowed." << "\n" << borrow << std::endl;
     }
 
     // Remove leading zeros
     while (!result.digits_.empty() && result.digits_.front() == 0) {
+        if (result.digits_.size() == 1 && result.digits_[0] == 0) {
+            result.is_negative_ = false;
+            break;
+        }
         result.digits_.erase(result.digits_.begin());
     }
 
@@ -232,6 +247,7 @@ SuperInt SuperInt::operator^(const SuperInt& other)
 
     // Do a while loop while(exp != 0) and check if exp is odd (if (exp & 1)) then multiply result by power
     // Then multiply power by itself and divide exp by 2 (exp >>= 1)
+    return SuperInt();
 }
 
 SuperInt SuperInt::operator%(const SuperInt& other)
@@ -239,6 +255,7 @@ SuperInt SuperInt::operator%(const SuperInt& other)
     
     // Things like a^b % c
     // Something interesting though (a + b) % c = (a % c + b % c) % c
+    return SuperInt();
 }
 
 SuperInt& SuperInt::operator=(const SuperInt& other)
@@ -283,27 +300,90 @@ SuperInt SuperInt::factorial(int n)
     return result;
 }
 
-int SuperInt::compare(const SuperInt& other) const
-{
-    // Compare the number of digits for a quick comparison
-    if (digits_.size() < other.digits_.size()) {
-        return -1; // This is smaller
-    }
-    if (digits_.size() > other.digits_.size()) {
-        return 1; // This is smaller
-    }
-
-    // compare digit by digit
-    for (size_t i = 0; i < digits_.size(); i++) {
-        if (digits_[i] < other.digits_[i]) {
-            return -1; // This is smaller
-        } else if (digits_[i] > other.digits_[i]) {
-            return 1; // This is larger
+bool SuperInt::operator<(const SuperInt& other) const {
+    // Compare signs first
+    if (is_negative_ && !other.is_negative_) {
+        // If 'this' is negative and 'other' is positive, 'this' is less
+        return true;
+    } else if (!is_negative_ && other.is_negative_) {
+        // If 'this' is positive and 'other' is negative, 'this' is greater
+        return false;
+    } else if (is_negative_ && other.is_negative_) {
+        // Both are negative, compare absolute values
+        if (digits_.size() > other.digits_.size()) {
+            return false;
+        } else if (digits_.size() < other.digits_.size()) {
+            return true;
+        } else {
+            for (size_t i = 0; i < digits_.size(); ++i) {
+                if (digits_[i] < other.digits_[i]) {
+                    return false;
+                } else if (digits_[i] > other.digits_[i]) {
+                    return true;
+                }
+            }
+            return false; // Equal
+        }
+    } else {
+        // Both are positive, compare absolute values
+        if (digits_.size() < other.digits_.size()) {
+            return true;
+        } else if (digits_.size() > other.digits_.size()) {
+            return false;
+        } else {
+            for (size_t i = 0; i < digits_.size(); ++i) {
+                if (digits_[i] < other.digits_[i]) {
+                    return true;
+                } else if (digits_[i] > other.digits_[i]) {
+                    return false;
+                }
+            }
+            return false; // Equal
         }
     }
+}
 
-    // Then its equal
-    return 0;
+bool SuperInt::operator>(const SuperInt& other) const {
+    // Compare signs first
+    if (is_negative_ && !other.is_negative_) {
+        // If 'this' is negative and 'other' is positive, 'this' is less
+        return false;
+    } else if (!is_negative_ && other.is_negative_) {
+        // If 'this' is positive and 'other' is negative, 'this' is greater
+        return true;
+    } else if (is_negative_ && other.is_negative_) {
+        // Both are negative, compare absolute values
+        if (digits_.size() > other.digits_.size()) {
+            return true;
+        } else if (digits_.size() < other.digits_.size()) {
+            return false;
+        } else {
+            for (size_t i = 0; i < digits_.size(); ++i) {
+                if (digits_[i] > other.digits_[i]) {
+                    return true;
+                } else if (digits_[i] < other.digits_[i]) {
+                    return false;
+                }
+            }
+            return false; // Equal
+        }
+    } else {
+        // Both are positive, compare absolute values
+        if (digits_.size() < other.digits_.size()) {
+            return false;
+        } else if (digits_.size() > other.digits_.size()) {
+            return true;
+        } else {
+            for (size_t i = 0; i < digits_.size(); ++i) {
+                if (digits_[i] > other.digits_[i]) {
+                    return true;
+                } else if (digits_[i] < other.digits_[i]) {
+                    return false;
+                }
+            }
+            return false; // Equal
+        }
+    }
 }
 
 int SuperInt::get_int() const

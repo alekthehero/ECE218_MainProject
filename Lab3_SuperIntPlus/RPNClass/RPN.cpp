@@ -62,7 +62,7 @@ void RPN::push(const SuperInt input)
 
 void RPN::iterate_string(const std::string& input)
 {
-    // coming in like 3 2 + 4 6 + +
+    // coming in like 3 2 + -4 6 + +
 
     // Change input to stringstream for easier parsing
     std::istringstream ss(input);
@@ -96,7 +96,7 @@ void RPN::iterate_string(const std::string& input)
             {
                 cout << "Defining Variable: " << accumulated_string << endl;
                 this->variables_.push_back(variable(accumulated_string, this->back())); // NOLINT(modernize-use-emplace)
-                break;
+                return;
             }
             break;
         }
@@ -111,8 +111,9 @@ void RPN::iterate_string(const std::string& input)
             // Push the accumulated number onto the stack
              if (!accumulated_number.empty()) {
                  // Convert the accumulated digits to a double and push onto the stack
-                 this->push(SuperInt(accumulated_number));
+                 this->push(SuperInt(accumulated_number, is_negative));
                  accumulated_number.clear(); // Reset the digit accumulator
+                 is_negative = false;
              }
              // Check if the accumulated string is a variable
              if (!accumulated_string.empty())
@@ -139,16 +140,8 @@ void RPN::iterate_string(const std::string& input)
                  }
                  if (!found)
                  {
-                     cout << "\nWarn: Variable " << accumulated_string << " not found" << endl;
-                     //prompt the user to enter it now
-                     cout << "Enter the value for " << accumulated_string << ": ";
-                     string value;
-                     cin >> value;
-                     //push the value onto the stack
-                     this->push(SuperInt(value));
-                     //add the variable to the vector
-                     this->variables_.push_back(variable(accumulated_string, SuperInt(value)));  // NOLINT(modernize-use-emplace)
-                     cin.ignore();
+                     cout << "Error: Variable " << accumulated_string << " not found" << endl;
+                     return;
                  }
                  
                  //clear the accumulated string
@@ -160,7 +153,7 @@ void RPN::iterate_string(const std::string& input)
             // if the stack is empty then we cant define a variable and if the accumulated string has contents the format is wrong
             if (this->rpn_stack_.empty() || !accumulated_string.empty())
             {
-                cout << "\nError: Cannot define variable | Check formatting" << endl;
+                cout << "Error: Cannot define variable | Check formatting" << endl;
                 break;
             }
             is_variable = true;
@@ -172,15 +165,15 @@ void RPN::iterate_string(const std::string& input)
         }
         else
         {
-            // Peek at the next character, if its a space then we have an operator if not then we have a negative sign
+            // Peek at the next character, if its a space then we have an operator/var assignment if not then we have a negative sign
             const char next_char = ss.peek();
-            if(next_char == ' ')
+            if(next_char == ' ' || next_char == -1)
             {
                 this->perform_operation(curr_Char);
             }
             else
             {
-                // Check the negative flag
+                // Set the negative flag
                 is_negative = true;
             }
             
@@ -205,7 +198,7 @@ bool RPN::two_items_check() const
     // if the stack doesnt contain at least 2 items then we cant do an operation
     if (this->rpn_stack_.size() < 2)
     {
-        cout << "\nError: Not enough items in the stack to perform an operation\nPlease enter valid input! | Add Spaces!!" << endl;
+        cout << "Error: Not enough items in the stack to perform an operation\nPlease enter valid input! | Add Spaces!!" << endl;
         return false;
     }
     return true;

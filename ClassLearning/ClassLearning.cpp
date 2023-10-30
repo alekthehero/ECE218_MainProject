@@ -53,14 +53,31 @@ int main(int argc, char* argv[])
 
 #pragma region InsertionSort_Array
 
-    int arr[] = { 9, 11, 13, 10, 6, 7, 1, 2, 3, 4, 5, 6 };
-
-    // Start with a line between sorted and unsorted sections of the array.
-    // the main loop will move the line to the right sort those two positions and there values and move to the next
-    // section.
-    // When the sorting is occuring it needs to take that item if not in the right place and insert it into the right
-    // place, for example when sorting 13 and 10, 10 will have to move after 9 and before 11
-    
+    // int arr[] = { 9, 11, 13, 10, 6, 7, 1, 2, 3, 4, 5, 6 };
+    // int length = 12;
+    //
+    // // Start with a line between sorted and unsorted sections of the array.
+    // // the main loop will move the line to the right sort those two positions and there values and move to the next
+    // // section.
+    // // When the sorting is occuring it needs to take that item if not in the right place and insert it into the right
+    // // place, for example when sorting 13 and 10, 10 will have to move after 9 and before 11
+    //
+    // for(int i = 1; i < length; i++)
+    // {
+    //     int key = arr[i];
+    //     int j = i - 1;
+    //     while(j >= 0 && arr[j] > key)
+    //     {
+    //         arr[j + 1] = arr[j];
+    //         j = j - 1;
+    //     }
+    //     arr[j + 1] = key;
+    // }
+    //
+    // for(int i : arr)
+    // {
+    //     cout << i << endl;
+    // }
 
 #pragma endregion
 
@@ -107,7 +124,36 @@ int main(int argc, char* argv[])
     // }
 
 #pragma endregion
+
+#pragma region SelectionSort
     
+    int arr[] = { 9, 11, 13, 10, 6, 7, 1, 2, 3, 4, 5, 6 };
+    int length = 12;
+
+    for (int i = 0; i < length - 1; i ++)
+    {
+        int minPos = i;
+        for(int j = i + 1; j < length; j++)
+        {
+            if (arr[minPos] < arr[j])
+            {
+                minPos = j;
+            }
+        }
+        if(minPos != i)
+        {
+            int temp = arr[i];
+            arr[i] = arr[minPos];
+            arr[minPos] = temp;
+        }
+    }
+
+    for (int i: arr)
+    {
+        cout << i << endl;
+    }
+
+#pragma endregion
     return 0;
 }
 
