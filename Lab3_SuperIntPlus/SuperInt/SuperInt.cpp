@@ -70,13 +70,9 @@ void SuperInt::printf(std::ostream& out) const
 
 SuperInt SuperInt::operator+(const SuperInt& other) {
     SuperInt result;
-
-    // Determine the signs of the operands
-    bool is_this_negative = is_negative_;
-    bool is_other_negative = other.is_negative_;
-
-    if (is_this_negative == is_other_negative) {
-        // Both operands have the same sign, perform addition
+    
+    if (this->is_negative_ == other.is_negative_) {
+        // Both operands have the same sign, perform addition keep sign
         int carry = 0;
         int i = digits_.size() - 1;
         int j = other.digits_.size() - 1;
@@ -97,12 +93,10 @@ SuperInt SuperInt::operator+(const SuperInt& other) {
             result.digits_.insert(result.digits_.begin(), sum);
         }
 
-        result.is_negative_ = is_this_negative;
+        result.is_negative_ = this->is_negative_;
     } else {
-        // Operands have different signs, perform subtraction
-        // If 'this' is negative and 'other' is positive, negate 'other' and add it to 'this'
-        if (is_this_negative) {
-            result = SuperInt(other) - *this;
+        if (this->is_negative_) {
+            result = other - *this;
         } else {
             result = *this - other;
         }
