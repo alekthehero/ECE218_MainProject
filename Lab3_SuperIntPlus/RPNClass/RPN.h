@@ -16,6 +16,7 @@ public:
     void print_variables() const;
     
     void perform_operation(char input) const;
+    void perform_function(std::string input) const;
     SuperInt back() const;
     void push(SuperInt input);
     void iterate_string(const std::string &input);

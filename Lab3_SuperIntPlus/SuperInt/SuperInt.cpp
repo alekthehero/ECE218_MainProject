@@ -1,8 +1,8 @@
 ﻿#include "SuperInt.h"
-
 #include <iostream>
 #include <ostream>
 #include <limits>
+
 
 SuperInt::SuperInt()
 {
@@ -95,30 +95,75 @@ SuperInt SuperInt::operator+(const SuperInt& other) {
 
         result.is_negative_ = this->is_negative_;
     } else {
-        if (this->is_negative_) {
-            result = other - *this;
-        } else {
-            result = *this - other;
-        }
+        result = *this - other;
     }
 
     return result;
 }
 
 SuperInt SuperInt::operator-(const SuperInt& other) const {
+    // This is front
+    // Other is second
     
     SuperInt result;
+    
+    SuperInt temp_this = *this;
+    SuperInt temp_other = other;
 
+    // Check if other is negative and this is positive, then just add
+    if (temp_other.is_negative_ && !temp_this.is_negative_) {
+        temp_other.is_negative_ = false;
+        return temp_this + temp_other;
+    }
+
+    // Check if this is negative and other is positive, then just add and make result negative
+    if (!temp_other.is_negative_ && temp_this.is_negative_) {
+        temp_this.is_negative_ = false;
+        result = temp_this + temp_other;
+        result.is_negative_ = true;
+        return result;
+    }
+
+    // If all three are negative then just add but check if other is larger or smaller to determine sign
+    // Other is larger then result is negative, other is smaller then result is positive
+    if (temp_other.is_negative_ && temp_this.is_negative_) {
+        
+        if (temp_this < temp_other) {
+            result.is_negative_ = true;
+            std::swap(temp_this, temp_other);
+        }
+        else
+        {
+            result.is_negative_ = false;
+        }
+
+        temp_other.is_negative_ = false;
+        temp_this.is_negative_ = false;
+        
+        result = temp_this - temp_other;
+        return result;
+    }
+
+    // Check sizes, if other is larger then swap and make result negative, If this is larger then keep result positive
+    if (temp_this < temp_other) {
+        result.is_negative_ = true;
+        std::swap(temp_this, temp_other);
+    }
+    else
+    {
+        result.is_negative_ = false;
+    }
+    
     // Borrow and index
     int borrow = 0;
-    int i = digits_.size() - 1;
-    int j = other.digits_.size() - 1;
+    int i = temp_this.digits_.size() - 1;
+    int j = temp_other.digits_.size() - 1;
 
     // Subtract right to left
     while (i >= 0 || j >= 0) {
         // Get the digits to subtract shorthand for 0 if we are out of digits
-        int num1 = (i >= 0) ? digits_[i] : 0;
-        int num2 = (j >= 0) ? other.digits_[j] : 0;
+        int num1 = (i >= 0) ? temp_this.digits_[i] : 0;
+        int num2 = (j >= 0) ? temp_other.digits_[j] : 0;
 
         int diff = num1 - num2 - borrow;
 
@@ -137,7 +182,7 @@ SuperInt SuperInt::operator-(const SuperInt& other) const {
 
     // Check if negative number
     if (borrow) {
-        std::cout << "Error: Negative number not allowed." << "\n" << borrow << std::endl;
+        std::cout << "Error: Swap didnt work." << "\n" << borrow << std::endl;
     }
 
     // Remove leading zeros
@@ -179,6 +224,11 @@ SuperInt SuperInt::operator*(const SuperInt& other)
         result.digits_.erase(result.digits_.begin());
     }
 
+    // Check if negative number
+    if (is_negative_ != other.is_negative_) {
+        result.is_negative_ = true;
+    }
+    
     return result;
 }
 
@@ -203,63 +253,74 @@ SuperInt SuperInt::operator*(const int& other)
             carry /= 10;
         }
     }
+    
+    if (is_negative_ && other > 0 || !is_negative_ && other < 0) {
+        result.is_negative_ = true;
+    }
 
     return result;
 }
 
 SuperInt SuperInt::operator/(const SuperInt& other)
 {
-    SuperInt result;
+    SuperInt quotient;
+    SuperInt remainder;
+    divmod_helper(other, quotient, remainder);
+    return quotient;
+}
 
-    // Check for divide by zero
-    if (other.digits_.empty()) {
-        std::cout << "Error: Divide by zero." << std::endl;
-        return result;
-    }
-
-    // Check for divide by one
-    if (other.digits_.size() == 1 && other.digits_[0] == 1) {
-        return *this;
-    }
-
-    // First check if the sizes are the same, if they are then multiply other by steps until it is larger or equal to
-    // this then the step count is the quotient.
-    // Multiply step count by other then subtract this by the product to calculate the remainder.
-    
-    
-    // If one is larger than the other then we need to do long division
-    // We will shift the divisor to the left until it is the same size as the dividend
-    // Then we will do the traditional long division algorithm from before to find the quotient
-    // REPEAT, for the number of shifts + 1 tracking the quotients, all of them put together will be the result,
-    // the last one will be the remainder
+SuperInt SuperInt::operator/(const int& other)
+{
+    SuperInt intAsSuperInt(std::to_string(other)); 
+    return (*this / intAsSuperInt);
 }
 
 SuperInt SuperInt::operator^(const SuperInt& other)
 {
-    // X^42 = X^32 * X^8 * X^2
-    // So start with 1 and multiply by X until we get to 42
+    SuperInt result = SuperInt("1");
+    SuperInt base = *this;
+    SuperInt exponent = other;
 
-    // Do a while loop while(exp != 0) and check if exp is odd (if (exp & 1)) then multiply result by power
-    // Then multiply power by itself and divide exp by 2 (exp >>= 1)
-    return SuperInt();
+    // Handle special cases
+    if (exponent.digits_.empty()) {
+        return SuperInt("1");
+    } else if (exponent.digits_.size() == 1 && exponent.digits_[0] == 1) {
+        return base;
+    } else if (exponent.is_negative_ == true) {
+        throw std::invalid_argument("Negative exponents are not supported.");
+    }
+
+    while (!exponent.is_zero()) {
+        if (exponent % 2 == 1) {
+            result = result * base;
+        }
+        base = base * base;
+        exponent = exponent / 2;
+    }
+
+    return result;
 }
 
 SuperInt SuperInt::operator%(const SuperInt& other)
 {
-    
-    // Things like a^b % c
-    // Something interesting though (a + b) % c = (a % c + b % c) % c
-    return SuperInt();
+    SuperInt quotient;
+    SuperInt remainder;
+    divmod_helper(other, quotient, remainder);
+    return remainder;
+}
+
+SuperInt SuperInt::operator%(const int& other)
+{
+    SuperInt intAsSuperInt(std::to_string(other));
+    return (*this % intAsSuperInt);
 }
 
 SuperInt& SuperInt::operator=(const SuperInt& other)
 {
-// Check for self assignment
     if (this == &other) {
         return *this;
     }
-
-    // Copy the digits
+    
     digits_ = other.digits_;
 
     return *this;
@@ -294,16 +355,75 @@ SuperInt SuperInt::factorial(int n)
     return result;
 }
 
+SuperInt SuperInt::powmod(SuperInt& pow, SuperInt& mod)
+{
+    SuperInt result("1");
+    SuperInt base(*this);
+
+    while (!pow.is_zero()) {
+        if (pow % 2 == 1) {
+            result = (result * base) % mod;
+        }
+        base = (base * base) % mod;
+        pow = pow / 2;
+    }
+
+    return result;
+}
+
+SuperInt SuperInt::random(int lower, int upper)
+{
+    if (lower > upper) {
+        throw std::invalid_argument("Lower bound should be less than or equal to the upper bound.");
+    }
+
+    SuperInt result;
+    
+    int numDigits = rand() % (upper - lower + 1) + lower;
+    
+    if (numDigits % 2 == 1)
+    {
+        result.is_negative_ = true;
+    }
+    
+    for (int i = 0; i < numDigits; ++i) {
+        int digit = (i == 0) ? rand() % 9 + 1 : rand() % 10;
+        result.digits_.push_back(digit);
+    }
+
+    return result;
+}
+
+SuperInt SuperInt::gcd(SuperInt first, SuperInt second)
+{
+    SuperInt x, t;
+    
+    first.is_negative_ = false;
+    second.is_negative_ = false;
+
+    while (!second.is_zero()) {
+        t = first;
+        first = second;
+        SuperInt qoutient = SuperInt();
+        t.divmod_helper(second, qoutient, x);
+        second = x;
+    }
+
+    first.is_negative_ = false;
+
+    return first;
+}
+
 bool SuperInt::operator<(const SuperInt& other) const {
-    // Compare signs first
+    
     if (is_negative_ && !other.is_negative_) {
-        // If 'this' is negative and 'other' is positive, 'this' is less
+       
         return true;
     } else if (!is_negative_ && other.is_negative_) {
-        // If 'this' is positive and 'other' is negative, 'this' is greater
+    
         return false;
     } else if (is_negative_ && other.is_negative_) {
-        // Both are negative, compare absolute values
+       
         if (digits_.size() > other.digits_.size()) {
             return false;
         } else if (digits_.size() < other.digits_.size()) {
@@ -316,10 +436,10 @@ bool SuperInt::operator<(const SuperInt& other) const {
                     return true;
                 }
             }
-            return false; // Equal
+            return false; 
         }
     } else {
-        // Both are positive, compare absolute values
+       
         if (digits_.size() < other.digits_.size()) {
             return true;
         } else if (digits_.size() > other.digits_.size()) {
@@ -332,21 +452,18 @@ bool SuperInt::operator<(const SuperInt& other) const {
                     return false;
                 }
             }
-            return false; // Equal
+            return false;
         }
     }
 }
 
 bool SuperInt::operator>(const SuperInt& other) const {
-    // Compare signs first
+  
     if (is_negative_ && !other.is_negative_) {
-        // If 'this' is negative and 'other' is positive, 'this' is less
         return false;
     } else if (!is_negative_ && other.is_negative_) {
-        // If 'this' is positive and 'other' is negative, 'this' is greater
         return true;
     } else if (is_negative_ && other.is_negative_) {
-        // Both are negative, compare absolute values
         if (digits_.size() > other.digits_.size()) {
             return true;
         } else if (digits_.size() < other.digits_.size()) {
@@ -359,10 +476,9 @@ bool SuperInt::operator>(const SuperInt& other) const {
                     return false;
                 }
             }
-            return false; // Equal
+            return false; 
         }
     } else {
-        // Both are positive, compare absolute values
         if (digits_.size() < other.digits_.size()) {
             return false;
         } else if (digits_.size() > other.digits_.size()) {
@@ -375,9 +491,40 @@ bool SuperInt::operator>(const SuperInt& other) const {
                     return false;
                 }
             }
-            return false; // Equal
+            return false; 
         }
     }
+}
+
+bool SuperInt::operator==(const SuperInt& other) const
+{
+    
+    if (is_negative_ != other.is_negative_) {
+        return false;
+    }
+    
+    if (digits_.size() != other.digits_.size()) {
+        return false;
+    }
+    
+    for (size_t i = 0; i < digits_.size(); ++i) {
+        if (digits_[i] != other.digits_[i]) {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+bool SuperInt::operator==(int i) const
+{
+    SuperInt compare = SuperInt(std::to_string(i));
+    return *this == compare;
+}
+
+bool SuperInt::operator>=(const SuperInt& other) const
+{
+    return (*this > other) || (*this == other);
 }
 
 int SuperInt::get_int() const
@@ -401,4 +548,59 @@ int SuperInt::get_int() const
     }
 
     return result;
+}
+
+bool SuperInt::is_zero() const
+{
+    for (const int digit : digits_)
+    {
+        if (digit != 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void SuperInt::divmod_helper(const SuperInt& other, SuperInt& quotient, SuperInt& remainder)
+{
+    if (other.digits_.size() == 1 && other.digits_[0] == 0) {
+        throw std::invalid_argument("Division by zero is not allowed.");
+    }
+
+    SuperInt dividend = *this;  
+    SuperInt divisor = other;
+    quotient = SuperInt();  
+    remainder = SuperInt();
+
+    // Get result sign
+    bool isNegative = (dividend.is_negative_ != divisor.is_negative_);
+
+    // Make both dividend and divisor positive for simplicity
+    dividend.is_negative_ = false;
+    divisor.is_negative_ = false;
+
+    while (dividend >= divisor) {
+        SuperInt temp_divisor = divisor;
+        SuperInt temp_quotient = SuperInt("1");
+
+        while (dividend >= temp_divisor) {
+            dividend = dividend - temp_divisor;
+            quotient = quotient + temp_quotient;
+            temp_divisor * 2; 
+            temp_quotient * 2; 
+        }
+    }
+
+    // Set the sign of the result
+    if (isNegative) {
+        quotient.is_negative_ = true;
+    }
+
+    // Set the sign of the remainder to match the dividend
+    if (this->is_negative_) {
+        remainder = dividend;
+        remainder.is_negative_ = true;
+    } else {
+        remainder = dividend;
+    }
 }
