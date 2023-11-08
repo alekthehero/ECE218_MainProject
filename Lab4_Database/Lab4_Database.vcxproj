@@ -161,6 +161,7 @@
     <ClInclude Include="Person.h" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="database-million.txt" />
     <Content Include="database-thousand.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

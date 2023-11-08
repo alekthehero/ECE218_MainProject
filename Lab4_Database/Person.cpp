@@ -8,13 +8,13 @@ person::person()
     this->year_Of_Birth_ = 0;
     this->first_name_ = "";
     this->last_name_ = "";
-    this->code_ = 0;
+    this->code_ = "";
 }
 
 person::person(const int ssn, const int day_of_birth, const int month_of_birth, const int year_of_birth,
     const std::string& first_name,
     const std::string& last_name,
-    const int code)
+    const std::string& code)
 {
     this->ssn_ = ssn;
     this->day_Of_Birth_ = day_of_birth;
@@ -57,7 +57,7 @@ std::string person::get_last_name()
     return this->last_name_;
 }
 
-int person::get_code() const
+std::string person::get_code() const
 {
     return this->code_;
 }
@@ -92,7 +92,7 @@ void person::set_last_name(const std::string& last_name)
     this->last_name_ = last_name;
 }
 
-void person::set_code(const int code)
+void person::set_code(const std::string& code)
 {
     this->code_ = code;
 }

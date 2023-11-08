@@ -17,24 +17,18 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-
-    string line;
+    std::string line;
     int ssn, day_of_birth, month_of_birth, year_of_birth;
     std::string first_name, last_name, code;
     
-    while(true)
+    while(getline(database, line))
     {
-        database >> ssn >> day_of_birth >> month_of_birth >> year_of_birth >> first_name >> last_name >> code;
-        if (database.fail()) {
-            cout << "test";
-            break;
-        }
-        else
-        {
-            person* p = new person(ssn, day_of_birth, month_of_birth, year_of_birth, first_name, last_name, code);
-            people.push_back(p);
-            cout << "First Name: " << p->get_first_name() << endl;
-        }
+        istringstream iss(line);
+        iss >> ssn >> day_of_birth >> month_of_birth >> year_of_birth >> first_name >> last_name >> code;
+        
+        person* p = new person(ssn, day_of_birth, month_of_birth, year_of_birth, first_name, last_name, code);
+        people.push_back(p);
+        cout << "First Name: " << p->get_first_name() << endl;
     }
 
     cout << "Number of people: " << people.size() << endl;

@@ -5,7 +5,8 @@ class person
 {
 public:
     person();
-    person(int ssn, int day_of_birth, int month_of_birth, int year_of_birth, const std::string& first_name, const std::string& last_name, int code);
+    person(int ssn, int day_of_birth, int month_of_birth, int year_of_birth,
+        const std::string& first_name, const std::string& last_name, const std::string& code);
     ~person();
 
     // Getters
@@ -15,7 +16,7 @@ public:
     int get_year_of_birth() const;
     std::string get_first_name();
     std::string get_last_name();
-    int get_code() const;
+    std::string get_code() const;
 
     // Setters
     void set_ssn(int ssn);
@@ -24,7 +25,7 @@ public:
     void set_year_of_birth(int year_of_birth);
     void set_first_name(const std::string& first_name);
     void set_last_name(const std::string& last_name);
-    void set_code(int code);
+    void set_code(const std::string& code);
     
 
 protected:
@@ -34,5 +35,5 @@ protected:
     int year_Of_Birth_;
     std::string first_name_;
     std::string last_name_;
-    int code_;
+    std::string code_;
 };
