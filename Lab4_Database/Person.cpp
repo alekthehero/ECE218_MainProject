@@ -1,6 +1,6 @@
 ﻿#include "Person.h"
 
-Person::Person()
+person::person()
 {
     this->ssn_ = 0;
     this->day_Of_Birth_ = 0;
@@ -11,89 +11,88 @@ Person::Person()
     this->code_ = 0;
 }
 
-Person::Person(int ssn, int day_Of_Birth, int month_Of_Birth, int year_Of_Birth, std::string first_name,
-    std::string last_name, int code)
+person::person(const int ssn, const int day_of_birth, const int month_of_birth, const int year_of_birth,
+    const std::string& first_name,
+    const std::string& last_name,
+    const int code)
 {
     this->ssn_ = ssn;
-    this->day_Of_Birth_ = day_Of_Birth;
-    this->month_Of_Birth_ = month_Of_Birth;
-    this->year_Of_Birth_ = year_Of_Birth;
+    this->day_Of_Birth_ = day_of_birth;
+    this->month_Of_Birth_ = month_of_birth;
+    this->year_Of_Birth_ = year_of_birth;
     this->first_name_ = first_name;
     this->last_name_ = last_name;
     this->code_ = code;
 }
 
-Person::~Person()
-{
-    
-}
+person::~person() = default;
 
-int Person::getSSN()
+int person::get_ssn() const
 {
     return this->ssn_;
 }
 
-int Person::getDayOfBirth()
+int person::get_day_of_birth() const
 {
     return this->day_Of_Birth_;
 }
 
-int Person::getMonthOfBirth()
+int person::get_month_of_birth() const
 {
     return this->month_Of_Birth_;
 }
 
-int Person::getYearOfBirth()
+int person::get_year_of_birth() const
 {
     return this->year_Of_Birth_;
 }
 
-std::string Person::getFirstName()
+std::string person::get_first_name()
 {
     return this->first_name_;
 }
 
-std::string Person::getLastName()
+std::string person::get_last_name()
 {
     return this->last_name_;
 }
 
-int Person::getCode()
+int person::get_code() const
 {
     return this->code_;
 }
 
-void Person::setSSN(int ssn)
+void person::set_ssn(const int ssn)
 {
     this->ssn_ = ssn;
 }
 
-void Person::setDayOfBirth(int day_Of_Birth)
+void person::set_day_of_birth(const int day_of_birth)
 {
-    this->day_Of_Birth_ = day_Of_Birth;
+    this->day_Of_Birth_ = day_of_birth;
 }
 
-void Person::setMonthOfBirth(int month_Of_Birth)
+void person::set_month_of_birth(const int month_of_birth)
 {
-    this->month_Of_Birth_ = month_Of_Birth;
+    this->month_Of_Birth_ = month_of_birth;
 }
 
-void Person::setYearOfBirth(int year_Of_Birth)
+void person::set_year_of_birth(const int year_of_birth)
 {
-    this->year_Of_Birth_ = year_Of_Birth_;
+    this->year_Of_Birth_ = year_of_birth;
 }
 
-void Person::setFirstName(std::string first_name)
+void person::set_first_name(const std::string& first_name)
 {
-    this->first_name_ = first_name_;
+    this->first_name_ = first_name;
 }
 
-void Person::setLastName(std::string last_name)
+void person::set_last_name(const std::string& last_name)
 {
-    this->last_name_ = last_name_;
+    this->last_name_ = last_name;
 }
 
-void Person::setCode(int code)
+void person::set_code(const int code)
 {
     this->code_ = code;
 }

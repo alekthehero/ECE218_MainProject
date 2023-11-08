@@ -1,30 +1,30 @@
 ﻿#pragma once
 #include <string>
 
-class Person
+class person
 {
 public:
-    Person();
-    Person(int ssn, int day_Of_Birth, int month_Of_Birth, int year_Of_Birth, std::string first_name, std::string last_name, int code);
-    ~Person();
+    person();
+    person(int ssn, int day_of_birth, int month_of_birth, int year_of_birth, const std::string& first_name, const std::string& last_name, int code);
+    ~person();
 
     // Getters
-    int getSSN();
-    int getDayOfBirth();
-    int getMonthOfBirth();
-    int getYearOfBirth();
-    std::string getFirstName();
-    std::string getLastName();
-    int getCode();
+    int get_ssn() const;
+    int get_day_of_birth() const;
+    int get_month_of_birth() const;
+    int get_year_of_birth() const;
+    std::string get_first_name();
+    std::string get_last_name();
+    int get_code() const;
 
     // Setters
-    void setSSN(int ssn);
-    void setDayOfBirth(int day_Of_Birth);
-    void setMonthOfBirth(int month_Of_Birth);
-    void setYearOfBirth(int year_Of_Birth);
-    void setFirstName(std::string first_name);
-    void setLastName(std::string last_name);
-    void setCode(int code);
+    void set_ssn(int ssn);
+    void set_day_of_birth(int day_of_birth);
+    void set_month_of_birth(int month_of_birth);
+    void set_year_of_birth(int year_of_birth);
+    void set_first_name(const std::string& first_name);
+    void set_last_name(const std::string& last_name);
+    void set_code(int code);
     
 
 protected:

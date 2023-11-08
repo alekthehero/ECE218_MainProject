@@ -9,9 +9,9 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-    vector<Person*> people;
+    vector<person*> people;
 
-    ifstream database("database-million.txt");
+    ifstream database("database-thousand.txt");
     if(!database.is_open()) {
         cout << "Error opening file" << endl;
         return 1;
@@ -19,17 +19,21 @@ int main(int argc, char* argv[])
 
 
     string line;
-    int ssn, day_Of_Birth, month_Of_Birth, year_Of_Birth, code;
-    std::string first_name, last_name;
+    int ssn, day_of_birth, month_of_birth, year_of_birth;
+    std::string first_name, last_name, code;
     
-    while(getline(database, line))
+    while(true)
     {
-        istringstream iss(line);
-        if(iss >> ssn >> day_Of_Birth >> month_Of_Birth >> year_Of_Birth >> first_name >> last_name >> code)
+        database >> ssn >> day_of_birth >> month_of_birth >> year_of_birth >> first_name >> last_name >> code;
+        if (database.fail()) {
+            cout << "test";
+            break;
+        }
+        else
         {
-            Person* person = new Person(ssn, day_Of_Birth, month_Of_Birth, year_Of_Birth, first_name, last_name, code);
-            people.push_back(person);
-            cout << "SSN: " << person->getSSN() << endl;
+            person* p = new person(ssn, day_of_birth, month_of_birth, year_of_birth, first_name, last_name, code);
+            people.push_back(p);
+            cout << "First Name: " << p->get_first_name() << endl;
         }
     }
 
