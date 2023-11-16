@@ -16,8 +16,12 @@ struct pussycat
     int age; 
     int number_of_legs; };
 
+void merge(int a[], int l, int mid, int r);
+void mergeSort(int a[], int l, int r);
+
 int main(int argc, char* argv[])
 {
+    int arr[] = { 9, 11, 13, 10, 6, 7, 1, 2, 3, 4, 5, 17};
     
 #pragma region LinkedList_Insert
     
@@ -127,7 +131,7 @@ int main(int argc, char* argv[])
 
 #pragma region SelectionSort
     
-    int arr[] = { 9, 11, 13, 10, 6, 7, 1, 2, 3, 4, 5, 6 };
+    /*int arr[] = { 9, 11, 13, 10, 6, 7, 1, 2, 3, 4, 5, 6 };
     int length = 12;
 
     for (int i = 0; i < length - 1; i ++)
@@ -151,9 +155,95 @@ int main(int argc, char* argv[])
     for (int i: arr)
     {
         cout << i << endl;
-    }
+    }*/
 
+#pragma endregion
+
+#pragma region Merge Sort Array
+
+    /*
+    mergeSort(arr, 0, 12-1);
+
+    for(int i = 0; i < 12; i ++)
+    {
+        cout<< arr[i] << " ";
+    }
+    */
+
+    
+
+#pragma endregion
+
+#pragma region Merge Sort Linked List
+
+    
+    
+    
 #pragma endregion
     return 0;
 }
+
+void merge(int a[], int l, int mid, int r)
+{
+    int LeftSub = l;
+    int RightSub = mid+1;
+    int TempSub = l;
+
+    int temp[12];
+
+    // Ensureing the sub arrays dont go out of bounds
+    while(LeftSub <= mid && RightSub <= r)
+    {
+        // Do comparisons
+        
+        if(a[LeftSub] <= a[RightSub])
+        {
+            // If the current index in left sub is less then right sub then put left in temp sub
+            temp[TempSub] = a[LeftSub];
+            // Move indexes up
+            LeftSub++;
+            TempSub++;
+        }
+        else
+        {
+            temp[TempSub] = a[RightSub];
+            // Move indexes up
+            RightSub++;
+            TempSub++;
+        }
+    }
+
+    //In case the sub arrays are not even length
+    while (LeftSub <= mid)
+    {
+        temp[TempSub] = a[LeftSub];
+        LeftSub++;
+        TempSub++;
+    }
+    while (RightSub <= r)
+    {
+        temp[TempSub] = a[RightSub];
+        RightSub++;
+        TempSub++;
+    }
+
+    // Put into original array
+    for(int s = l; s < r; s++)
+    {
+        a[s] = temp[s];
+    }
+}
+
+void mergeSort(int a[], int l, int r)
+{
+    if (l < r)
+    {
+        int mid = (l+r)/2;
+        mergeSort(a, l, mid);
+        mergeSort(a, mid+1, r);
+        merge(a, l, mid, r);
+    }
+}
+
+
 

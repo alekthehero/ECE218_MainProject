@@ -17,6 +17,7 @@ public:
     any * get(int index);
     void print();
     
+    
     link<any> * head;
     
 };
