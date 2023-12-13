@@ -66,13 +66,25 @@ void BinaryTree::remove(Person* data)
 
 Person* BinaryTree::search(std::string first, std::string last)
 {
-    return nullptr;
+    return searchHelper(root, first, last);
+}
+
+Person* BinaryTree::searchHelper(Node* root, std::string first, std::string last) {
+    if (root == nullptr || (root->data->first == first && root->data->last == last)) {
+        return (root != nullptr) ? root->data : nullptr;
+    }
+
+    if (last < root->data->last || (last == root->data->last && first < root->data->first)) {
+        return searchHelper(root->left, first, last);
+    } else {
+        return searchHelper(root->right, first, last);
+    }
 }
 
 void BinaryTree::inOrderTraversal(Node* root) {
     if (root != nullptr) {
         inOrderTraversal(root->left);
-        std::cout << root->data->first << " " << root->data->last << std::endl;
+        std::cout << root->data->first << " " << root->data->last << " " << root->data->birthDate << " " << root->data->social << " " << root->data->zip << std::endl;
         inOrderTraversal(root->right);
     }
 }
@@ -80,4 +92,47 @@ void BinaryTree::inOrderTraversal(Node* root) {
 void BinaryTree::print()
 {
     inOrderTraversal(root);
+}
+
+void BinaryTree::printByZip(std::string zip)
+{
+    printByZipHelper(root, zip);
+}
+
+void BinaryTree::printByZipHelper(const Node* root, std::string zip) {
+    if (root != nullptr) {
+        printByZipHelper(root->left, zip);
+
+        // Check if the person's zip code matches the specified zip
+        if (root->data->zip == zip) {
+            // Print information about the person
+            std::cout << root->data->last << ", " << root->data->first << std::endl;
+            // Add other fields as needed
+        }
+
+        printByZipHelper(root->right, zip);
+    }
+}
+
+Person* BinaryTree::searchOldestHelper(const Node* root, Person* oldestPerson)
+{
+    if (root != nullptr) {
+        // Traverse the left subtree first
+        oldestPerson = searchOldestHelper(root->left, oldestPerson);
+
+        // Check if the current person is older than the currently known oldest person
+        if (oldestPerson == nullptr || root->data->birthDate > oldestPerson->birthDate) {
+            oldestPerson = root->data;
+        }
+
+        // Traverse the right subtree
+        oldestPerson = searchOldestHelper(root->right, oldestPerson);
+    }
+
+    return oldestPerson;
+}
+
+Person* BinaryTree::searchOldest()
+{
+    return searchOldestHelper(root, nullptr);
 }
