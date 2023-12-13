@@ -15,7 +15,7 @@ struct Node
 
 class BinaryTree
 {
-private:
+protected:
     Node* root;
 
 public:
@@ -25,5 +25,7 @@ public:
     void insert(Person* data);
     void remove(Person* data);
     Person* search(std::string first, std::string last);
-    
+    void inOrderTraversal(Node* root);
+
+    void print();
 };
