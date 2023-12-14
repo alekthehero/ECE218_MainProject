@@ -121,22 +121,19 @@ void BinaryTree::printByZipHelper(const Node* root, std::string zip) {
 Person* BinaryTree::searchOldestHelper(const Node* root, Person* oldestPerson)
 {
     if (root != nullptr) {
-        // Traverse the left subtree first
         oldestPerson = searchOldestHelper(root->left, oldestPerson);
-
-        // Check if the current person is older than the currently known oldest person
+        
         if (oldestPerson == nullptr || root->data->birthDate > oldestPerson->birthDate) {
             oldestPerson = root->data;
         }
-
-        // Traverse the right subtree
+        
         oldestPerson = searchOldestHelper(root->right, oldestPerson);
     }
 
     return oldestPerson;
 }
 
-void BinaryTree::saveHelper(Node* root, std::ofstream& file)
+void BinaryTree::saveHelper(const Node* root, std::ofstream& file)
 {
     if (root != nullptr) {
         saveHelper(root->left, file);
@@ -155,6 +152,10 @@ void BinaryTree::relocatePerson(std::string first, std::string last, std::string
     Person* person = search(first, last);
     if (person != nullptr) {
         person->zip = newZip;
+        std::cout << "Relocated " << first << " " << last << " to " << newZip << std::endl;
     }
-    std::cout << "Relocated " << first << " " << last << " to " << newZip << std::endl;
+    else
+    {
+        std::cout << "No person found" << std::endl;
+    }
 }

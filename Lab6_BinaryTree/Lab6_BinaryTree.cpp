@@ -64,7 +64,13 @@ int main(int argc, char* argv[]) {
             tree.printByZip(zipCode);
             
         } else if (command == "OLDEST") {
-            tree.searchOldest();
+            Person* oldest = tree.searchOldest();
+            if (oldest != nullptr) {
+                std::cout << "Oldest person is " << oldest->first << " " << oldest->last << " " << oldest->birthDate << " " << oldest->social << " " << oldest->zip << std::endl;
+            } else {
+                std::cout << "No people in tree" << std::endl;
+            }
+            
         } else if (command == "SAVE") {
             std::string saveFilename;
             std::cin >> saveFilename;

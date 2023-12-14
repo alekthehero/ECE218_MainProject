@@ -20,7 +20,7 @@ protected:
     Person* searchHelper(Node* root, std::string first, std::string last);
     void printByZipHelper(const Node* root, std::string zip);
     Person* searchOldestHelper(const Node* root, Person* oldestPerson);
-    void saveHelper(Node* root, std::ofstream& file);
+    void saveHelper(const Node* root, std::ofstream& file);
 
 public:
     BinaryTree();
