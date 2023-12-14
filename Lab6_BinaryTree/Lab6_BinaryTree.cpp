@@ -27,16 +27,20 @@ int main(int argc, char* argv[]) {
 
     //Read a line of the file, turn it into a person object, and insert it into the binary tree
     int count = 0;
-    while (!file.eof())
+    while (true)
     {
         std::string firstName, lastName, zip;
         int social, birthDay, birthMonth, birthYear;
         file >> social >> birthDay >> birthMonth >> birthYear >> firstName >> lastName >> zip;
         int birthDate = birthYear * 10000 + birthMonth * 100 + birthDay;
         Person* person = new Person(social, birthDate, firstName, lastName, zip);
-
+        
         tree.insert(person);
         count++;
+
+        if (file.eof()) {
+            break;
+        }
     }
 
     file.close();
