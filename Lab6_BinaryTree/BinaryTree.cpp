@@ -137,7 +137,11 @@ void BinaryTree::saveHelper(const Node* root, std::ofstream& file)
 {
     if (root != nullptr) {
         saveHelper(root->left, file);
-        file << root->data->social << " " << root->data->birthDate << " " << root->data->first << " " << root->data->last << " " << root->data->zip << std::endl;
+        //reformat the date
+        int birthYear = root->data->birthDate / 10000;
+        int birthMonth = (root->data->birthDate % 10000) / 100;
+        int birthDay = root->data->birthDate % 100;
+        file << root->data->social << " " << birthDay << " " << birthMonth << " " << birthYear << " " << root->data->first << " " << root->data->last << " " << root->data->zip << std::endl;
         saveHelper(root->right, file);
     }
 }
