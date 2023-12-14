@@ -123,7 +123,7 @@ Person* BinaryTree::searchOldestHelper(const Node* root, Person* oldestPerson)
     if (root != nullptr) {
         oldestPerson = searchOldestHelper(root->left, oldestPerson);
         
-        if (oldestPerson == nullptr || root->data->birthDate > oldestPerson->birthDate) {
+        if (oldestPerson == nullptr || root->data->birthDate < oldestPerson->birthDate) {
             oldestPerson = root->data;
         }
         
