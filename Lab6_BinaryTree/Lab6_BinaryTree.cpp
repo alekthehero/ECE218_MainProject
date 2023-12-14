@@ -26,6 +26,7 @@ int main(int argc, char* argv[]) {
     BinaryTree tree;
 
     //Read a line of the file, turn it into a person object, and insert it into the binary tree
+    int count = 0;
     while (!file.eof())
     {
         std::string firstName, lastName, zip;
@@ -35,12 +36,12 @@ int main(int argc, char* argv[]) {
         Person* person = new Person(social, birthDate, firstName, lastName, zip);
 
         tree.insert(person);
-        std::cout << "Inserted " << firstName << " " << lastName << std::endl;
+        count++;
     }
 
     file.close();
-
-    // Interactive loop for user commands
+    std::cout << "Loaded " << count << " records." << std::endl;
+    
     while (true) {
         std::cout << "Enter command (FIND, PRINT, ZIP, OLDEST, SAVE, RELOCATE, EXIT): ";
         std::string command;
@@ -63,26 +64,26 @@ int main(int argc, char* argv[]) {
             tree.printByZip(zipCode);
             
         } else if (command == "OLDEST") {
-            // Print the name and zipcode of the oldest person in the database
-            // Example: databaseTree.displayOldestPerson();
-            
+            tree.searchOldest();
         } else if (command == "SAVE") {
             std::string saveFilename;
             std::cin >> saveFilename;
-            // Save the entire database to the named file
-            // Example: databaseTree.saveToFile(saveFilename);
+
+            tree.save(saveFilename);
+            
         } else if (command == "RELOCATE") {
             std::string relocateFirstName, relocateLastName, newZipCode;
             std::cin >> relocateFirstName >> relocateLastName >> newZipCode;
-            // Change the zip code of the named person
-            // Example: databaseTree.relocatePerson(relocateFirstName, relocateLastName, newZipCode);
+
+            tree.relocatePerson(relocateFirstName, relocateLastName, newZipCode);
+            
         } else if (command == "EXIT") {
-            break; // Exit the program
+            break;
         } else {
             std::cout << "Invalid command. Try again." << std::endl;
         }
     }
 
     
-    return 0;  // Exit successfully
+    return 0;
 }

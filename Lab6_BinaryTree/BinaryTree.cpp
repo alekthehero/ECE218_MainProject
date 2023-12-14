@@ -1,5 +1,5 @@
 ﻿#include "BinaryTree.h"
-
+#include <fstream>
 #include <iostream>
 
 BinaryTree::BinaryTree()
@@ -14,47 +14,37 @@ BinaryTree::~BinaryTree()
 
 void BinaryTree::insert(Person* data)
 {
-    //Insert data into the tree
-    //If the tree is empty, set the root to the new node
     if (root == nullptr)
     {
         root = new Node(data);
         return;
     }
-
-    //Otherwise, find the correct place to insert the data based on data comparison
+    
     Node* current = root;
 
     while (true)
     {
-        // Compare data to decide whether to move left or right
         if (*data < *(current->data))
         {
-            // Move left
             if (current->left == nullptr)
             {
-                // If the left child is null, insert the new node here
                 current->left = new Node(data);
                 return;
             }
-            // Move to the left child
             current = current->left;
         }
         else if (*(current->data) < *data)
         {
-            // Move right
             if (current->right == nullptr)
             {
-                // If the right child is null, insert the new node here
+                
                 current->right = new Node(data);
                 return;
             }
-            // Move to the right child
             current = current->right;
         }
         else
         {
-            // In this example, I'm assuming duplicate names are not allowed, so we don't insert duplicates.
             return;
         }
     }
@@ -87,6 +77,20 @@ void BinaryTree::inOrderTraversal(Node* root) {
         std::cout << root->data->first << " " << root->data->last << " " << root->data->birthDate << " " << root->data->social << " " << root->data->zip << std::endl;
         inOrderTraversal(root->right);
     }
+}
+
+void BinaryTree::save(std::string filename)
+{
+    std::ofstream outFile(filename);
+
+    if (!outFile.is_open()) {
+        std::cerr << "Error: Unable to open file " << filename << " for writing." << std::endl;
+        return;
+    }
+    saveHelper(root, outFile);
+    outFile.close();
+
+    std::cout << "Saved to " << filename << std::endl;
 }
 
 void BinaryTree::print()
@@ -132,7 +136,25 @@ Person* BinaryTree::searchOldestHelper(const Node* root, Person* oldestPerson)
     return oldestPerson;
 }
 
+void BinaryTree::saveHelper(Node* root, std::ofstream& file)
+{
+    if (root != nullptr) {
+        saveHelper(root->left, file);
+        file << root->data->social << " " << root->data->birthDate << " " << root->data->first << " " << root->data->last << " " << root->data->zip << std::endl;
+        saveHelper(root->right, file);
+    }
+}
+
 Person* BinaryTree::searchOldest()
 {
     return searchOldestHelper(root, nullptr);
+}
+
+void BinaryTree::relocatePerson(std::string first, std::string last, std::string newZip)
+{
+    Person* person = search(first, last);
+    if (person != nullptr) {
+        person->zip = newZip;
+    }
+    std::cout << "Relocated " << first << " " << last << " to " << newZip << std::endl;
 }
