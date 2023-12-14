@@ -1,5 +1,6 @@
 ﻿#include "BinaryTree.h"
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 
 BinaryTree::BinaryTree()
@@ -81,7 +82,7 @@ void BinaryTree::inOrderTraversal(Node* root) {
 
 void BinaryTree::save(std::string filename)
 {
-    std::ofstream outFile(filename);
+    std::ofstream outFile(filename + ".txt");
 
     if (!outFile.is_open()) {
         std::cerr << "Error: Unable to open file " << filename << " for writing." << std::endl;
@@ -137,11 +138,10 @@ void BinaryTree::saveHelper(const Node* root, std::ofstream& file)
 {
     if (root != nullptr) {
         saveHelper(root->left, file);
-        //reformat the date
         int birthYear = root->data->birthDate / 10000;
         int birthMonth = (root->data->birthDate % 10000) / 100;
         int birthDay = root->data->birthDate % 100;
-        file << root->data->social << " " << birthDay << " " << birthMonth << " " << birthYear << " " << root->data->first << " " << root->data->last << " " << root->data->zip << std::endl;
+        file << std::setfill('0') << std::setw(9) << std::right << root->data->social << " " << std::setw(2) << std::right << birthDay << " " << std::setw(2) << std::right << birthMonth << " " << std::setw(4) << std::right << birthYear << " " << root->data->first << " " << root->data->last << " " << root->data->zip << std::endl;
         saveHelper(root->right, file);
     }
 }
